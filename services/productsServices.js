@@ -1,14 +1,10 @@
-const Joi = require('joi');
-const { runSchema } = require('./validate');
+// const Joi = require('joi');
 const productModel = require('../models/productsModels');
 const NotFound = require('../errors/NotFoundError');
 const Name = require('../errors/BodyValidationError');
 
 const productService = {
-  idValidate: runSchema(Joi.object({
-    id: Joi.number().required().positive().integer(),
-  })),
-  bodyValidate: async ({ name }) => {
+  bodyValidate: async (name) => {
     if (!name || name.length === 0) {
       throw Name.requiredName('"name" is required');
     }
