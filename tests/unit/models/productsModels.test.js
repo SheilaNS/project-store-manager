@@ -42,5 +42,11 @@ describe('01 - MODEL', () => {
       expect(response).to.be.a('array');
       expect(response).to.have.length(1);
     });
+    it('verifica se adiciona um produto', async () => {
+      sinon.stub(connection, 'query').resolves([{ insertId: 4 }]);
+      const response = await productModel.create('ProdutoX');
+      expect(response).to.be.a('number');
+      expect(response).to.be.equal(4);
+    })
   });
 });

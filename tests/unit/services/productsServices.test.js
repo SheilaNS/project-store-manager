@@ -1,7 +1,10 @@
 const sinon = require('sinon');
+const chai = require('chai');
 const { expect, use } = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const NotFound = require('../../../errors/NotFoundError');
+const Name = require('../../../errors/BodyValidationError');
+
 
 const productModel = require('../../../models/productsModels');
 const productService = require('../../../services/productsServices');
@@ -11,7 +14,7 @@ const ONE_PROD = [{
     id: 1,
     name: "Martelo de Thor",
   }];
-
+  
 const LIST_PROD = [
     {
       id: 1,
@@ -64,5 +67,42 @@ describe('02 - SERVICE', () => {
       const response = await productService.getAll();
       expect(response).to.have.length(3);
     })
+  })
+
+  describe('04 - cria um produto', () => {
+    beforeEach(() => {
+      sinon.stub(productModel, 'create').resolves(4)
+    });
+
+    afterEach(() => sinon.restore());
+
+    it('retorna um número', async () => {
+      const id = await productService.create('ProdutoX');
+      expect(id).to.be.equal(4);
+    })
+  })
+
+  describe('05 - valida o body da requisição', () => {
+    beforeEach(() => {
+      sinon.stub(Name, 'requiredName').resolves('"name" is required')
+    });
+
+    afterEach(() => sinon.restore());
+
+    it('deve disparar um erro NotFoundError se o model responder false', () => {
+      sinon.stub(productModel, 'exists').resolves(false);
+      chai.expect(productService.ifExists(0))
+        .to.eventually.be.rejectedWith(NotFound);
+    });
+    it('deve disparar um erro RequiredName se o model responder false', () => {
+      // sinon.stub(productModel, 'exists').resolves(false);
+      chai.expect(productService.bodyValidate(''))
+        .to.eventually.be.rejectedWith(Name.requiredName);
+    });
+    it('deve disparar um erro MinName se o model responder false', () => {
+      // sinon.stub(productModel, 'exists').resolves(false);
+      chai.expect(productService.bodyValidate('new'))
+        .to.eventually.be.rejectedWith(Name.MinName);
+    });
   })
 })
