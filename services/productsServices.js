@@ -15,7 +15,8 @@ const productService = {
     if (name.length < 5) {
       throw Name.minName('"name" length must be at least 5 characters long');
     }
-  },  ifExists: async (id) => {
+  },
+  ifExists: async (id) => {
     const exists = await productModel.exists(id);
     if (!exists.length) {
       throw new NotFound('Product not found');
