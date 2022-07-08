@@ -1,8 +1,22 @@
-// const Joi = require('joi');
 const productModel = require('../models/productsModels');
 const NotFound = require('../errors/NotFoundError');
+const Name = require('../errors/BodyValidationError');
 
 const productService = {
+  idValidate: async (id) => {
+    const exists = await productModel.exists(id);
+    if (!exists.length) {
+      throw new NotFound('Product not found');
+    }
+  },
+  bodyValidate: async ({ name }) => {
+    if (!name || name.length === 0) {
+      throw Name.requiredName('"name" is required');
+    }
+    if (name.length < 5) {
+      throw Name.minName('"name" length must be at least 5 characters long')
+    }
+  },
   ifExists: async (id) => {
     const exists = await productModel.exists(id);
     if (!exists.length) {

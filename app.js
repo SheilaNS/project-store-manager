@@ -24,6 +24,8 @@ app.post('/products', productController.createProd);
 app.use((err, _req, res, _next) => {
   const { name, message } = err;
   switch (name) {
+    case 'RequiredName': res.status(400).json({ message }); break;
+    case 'MinName': res.status(422).json({ message }); break;
     case 'NotFoundError': res.status(404).json({ message }); break;
     default: console.warn(err); res.sendStatus(500);
   }
