@@ -3,6 +3,7 @@ const productController = require('../controllers/productsControllers');
 
 const productRoute = Router();
 
+productRoute.delete('/:id', productController.deleteProd);
 productRoute.get('/:id', productController.getById);
 productRoute.get('/', productController.getAll);
 

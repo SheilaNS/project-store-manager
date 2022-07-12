@@ -18,6 +18,12 @@ const productController = {
     const product = await productService.getById(id);
     res.status(201).json(product);
   },
+  deleteProd: async (req, res) => {
+    const { id } = req.params;
+    await productService.ifExists(id);
+    await productService.delete(id);
+    res.sendStatus(204);
+  },
 };
 
 module.exports = productController;
