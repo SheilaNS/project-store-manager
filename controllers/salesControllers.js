@@ -6,9 +6,7 @@ const saleController = {
     const saleData = req.body;
     await saleService.bodyValidate(saleData);
     // saleData.forEach(async (elem) => await saleService.bodyValidate(elem));
-    const exists = saleData.map(({ productId }) => {
-      productService.ifExists(productId);
-    });
+    const exists = saleData.map(({ productId }) => productService.ifExists(productId));
     await Promise.all(exists);
     const id = await saleService.createSale();
     const insert = saleData.map(({ productId, quantity }) => {
