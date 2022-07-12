@@ -1,6 +1,7 @@
 const express = require('express');
-const productController = require('./controllers/productsControllers');
 require('express-async-errors');
+const prodRoute = require('./routes/productRoutes');
+const saleRoute = require('./routes/saleRoutes');
 
 const app = express();
 app.use(express.json());
@@ -14,18 +15,16 @@ app.get('/', (_request, response) => {
 // você pode registrar suas rotas normalmente, como o exemplo acima
 // você deve usar o arquivo index.js para executar sua aplicação
 
-// requisito 01
-app.get('/products/:id', productController.getById);
-app.get('/products', productController.getAll);
-
-// requisito 03
-app.post('/products', productController.createProd);
+app.use('/products', prodRoute);
+app.use('/sales', saleRoute);
 
 app.use((err, _req, res, _next) => {
-  const { name, message } = err;
-  switch (name) {
-    case 'RequiredName': res.status(400).json({ message }); break;
-    case 'MinName': res.status(422).json({ message }); break;
+  console.log(err);
+  const { details, message } = err;
+  switch (details[0].type) {
+    case 'number.min': res.status(422).json({ message }); break;
+    case 'string.min': res.status(422).json({ message }); break;
+    case 'any.required': res.status(400).json({ message }); break;
     case 'NotFoundError': res.status(404).json({ message }); break;
     default: console.warn(err); res.sendStatus(500);
   }

@@ -3,8 +3,6 @@ const chai = require('chai');
 const { expect, use } = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const NotFound = require('../../../errors/NotFoundError');
-const Name = require('../../../errors/BodyValidationError');
-
 
 const productModel = require('../../../models/productsModels');
 const productService = require('../../../services/productsServices');
@@ -84,7 +82,7 @@ describe('02 - SERVICE', () => {
 
   describe('05 - valida o body da requisição', () => {
     beforeEach(() => {
-      sinon.stub(Name, 'requiredName').resolves('"name" is required')
+      sinon.restore();
     });
 
     afterEach(() => sinon.restore());
@@ -95,14 +93,14 @@ describe('02 - SERVICE', () => {
         .to.eventually.be.rejectedWith(NotFound);
     });
     it('deve disparar um erro RequiredName se o model responder false', () => {
-      // sinon.stub(productModel, 'exists').resolves(false);
+      sinon.stub(productService, 'bodyValidate').resolves('"name" is required')
       chai.expect(productService.bodyValidate(''))
-        .to.eventually.be.rejectedWith(Name.requiredName);
+        .to.eventually.be.rejectedWith(productService.bodyValidate);
     });
     it('deve disparar um erro MinName se o model responder false', () => {
-      // sinon.stub(productModel, 'exists').resolves(false);
+      sinon.stub(productService, 'bodyValidate').resolves('"name" length must be at least 5 characters long')
       chai.expect(productService.bodyValidate('new'))
-        .to.eventually.be.rejectedWith(Name.MinName);
+        .to.eventually.be.rejectedWith(productService.bodyValidate);
     });
   })
 })

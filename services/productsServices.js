@@ -1,22 +1,18 @@
-// const Joi = require('joi');
 const productModel = require('../models/productsModels');
-const NotFound = require('../errors/NotFoundError');
-const Name = require('../errors/BodyValidationError');
+const Joi = require('joi');
+const { throwNotFoundError } = require('../errors/NotFoundError');
 
 const productService = {
-  bodyValidate: async (name) => {
-    if (!name || name.length === 0) {
-      throw Name.requiredName('"name" is required');
-    }
-    if (name.length < 5) {
-      throw Name.minName('"name" length must be at least 5 characters long');
-    }
+  bodyValidate: async (data) => {
+    const schema = Joi.object({
+      name: Joi.string().min(5).required(),
+    });
+    const result = await schema.validateAsync(data);
+    return result;
   },
   ifExists: async (id) => {
     const exists = await productModel.exists(id);
-    if (!exists.length) {
-      throw new NotFound('Product not found');
-    }
+    if (!exists.length) throwNotFoundError('Product not found');
   },
   getById: async (id) => {
     const product = await productModel.getById(id);
