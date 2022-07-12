@@ -1,5 +1,5 @@
-const productService = require("../services/productsServices");
-const saleService = require("../services/salesServices");
+const productService = require('../services/productsServices');
+const saleService = require('../services/salesServices');
 
 const saleController = {
   create: async (req, res) => {
@@ -9,14 +9,13 @@ const saleController = {
     const exists = saleData.map(({ productId }) => productService.ifExists(productId));
     await Promise.all(exists);
     const id = await saleService.createSale();
-    const insert = saleData.map(({ productId, quantity }) => {
-      saleService.createSaleProd(id, productId, quantity);
-    });
+    const insert = saleData.map(({ productId, quantity }) => saleService
+      .createSaleProd(id, productId, quantity));
     await Promise.all(insert);
     const response = {
       id,
-      itemsSold: saleData
-    }
+      itemsSold: saleData,
+    };
     res.status(201).json(response);
   },
 };

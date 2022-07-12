@@ -1,5 +1,5 @@
-const productModel = require('../models/productsModels');
 const Joi = require('joi');
+const productModel = require('../models/productsModels');
 const { throwNotFoundError } = require('../errors/NotFoundError');
 
 const productService = {
