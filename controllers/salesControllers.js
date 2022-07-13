@@ -18,6 +18,34 @@ const saleController = {
     };
     res.status(201).json(response);
   },
+  getAllSales: async (_req, res) => {
+    const sales = await saleService.getAllSales();
+    const rightSales = sales.map((elem) => {
+      const rightSale = {
+        saleId: elem.id,
+        date: elem.date,
+        productId: elem.product_id,
+        quantity: elem.quantity,
+      }
+      return rightSale;
+    });
+
+    res.status(200).json(rightSales);
+  },
+  getOneSale: async (req, res) => {
+    const { id } = req.params;
+    await saleService.ifExists(id);
+    const sale = await saleService.getOneSale(id);
+    const salesWithNoId = sale.map((elem) => {
+      const saleWithNoPass = {
+        date: elem.date,
+        productId: elem.product_id,
+        quantity: elem.quantity,
+      }
+      return saleWithNoPass;
+    });
+    res.status(200).json(salesWithNoId);
+  },
 };
 
 module.exports = saleController;

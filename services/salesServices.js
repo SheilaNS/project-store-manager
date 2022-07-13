@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { throwNotFoundError } = require('../errors/NotFoundError');
 
 const saleModel = require('../models/salesModels');
 
@@ -13,6 +14,10 @@ const saleService = {
     // if (result.error) throw result.message;
     return result;
   },
+    ifExists: async (id) => {
+    const exists = await saleModel.exists(id);
+    if (!exists.length) throwNotFoundError('Sale not found');
+  },
   createSale: async () => {
     const id = await saleModel.createSale();
     return id;
@@ -22,6 +27,14 @@ const saleService = {
   },
   getSaleById: async (id) => {
     const sale = await saleModel.getSaleById(id);
+    return sale;
+  },
+  getAllSales: async () => {
+    const sales = await saleModel.getAllSales();
+    return sales;
+  },
+  getOneSale: async (id) => {
+    const sale = await saleModel.getOneSale(id);
     return sale;
   },
 };
