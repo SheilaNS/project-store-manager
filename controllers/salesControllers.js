@@ -26,7 +26,7 @@ const saleController = {
         date: elem.date,
         productId: elem.product_id,
         quantity: elem.quantity,
-      }
+      };
       return rightSale;
     });
 
@@ -41,7 +41,7 @@ const saleController = {
         date: elem.date,
         productId: elem.product_id,
         quantity: elem.quantity,
-      }
+      };
       return saleWithNoPass;
     });
     res.status(200).json(salesWithNoId);
