@@ -81,20 +81,22 @@ describe('02 - SERVICE', () => {
   })
 
   describe('05 - valida o body da requisição', () => {
-    beforeEach(() => {
-      sinon.restore();
-    });
+    // beforeEach(() => {
+    //   sinon.restore();
+    // });
 
     afterEach(() => sinon.restore());
 
-    it('deve disparar um erro NotFoundError se o model responder false', () => {
-      sinon.stub(productModel, 'exists').resolves(false);
-      chai.expect(productService.ifExists(0))
-        .to.eventually.be.rejectedWith(NotFound);
+    it.only('deve disparar um erro NotFoundError se o model responder false',async () => {
+      sinon.stub(productModel, 'exists').resolves([]);
+      const any = await productService.ifExists(0);
+      console.log(any);
+      // chai.expect(await productService.ifExists(0))
+      //   .to.eventually.be.rejectedWith(NotFound);
     });
-    it('deve disparar um erro RequiredName se o model responder false', () => {
+    it('deve disparar um erro RequiredName se o model responder false', async () => {
       sinon.stub(productService, 'bodyValidate').resolves('"name" is required')
-      chai.expect(productService.bodyValidate(''))
+      chai.expect(await productService.bodyValidate(''))
         .to.eventually.be.rejectedWith(productService.bodyValidate);
     });
     it('deve disparar um erro MinName se o model responder false', () => {

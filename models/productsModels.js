@@ -14,6 +14,7 @@ const productModel = {
   exists: async (id) => {
     const sql = 'SELECT 1 FROM StoreManager.products WHERE id = ?;';
     const [result] = await connection.query(sql, [id]);
+    console.log(result);
     return result;
   },
   create: async (name) => {

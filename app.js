@@ -19,7 +19,7 @@ app.use('/products', prodRoute);
 app.use('/sales', saleRoute);
 
 app.use((err, _req, res, _next) => {
-  console.log(err);
+  // console.log(err);
   const { details, message } = err;
   switch (details[0].type) {
     case 'number.min': res.status(422).json({ message }); break;
